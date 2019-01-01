@@ -1,13 +1,11 @@
 <template>
   <div class="menu">
-    <div @click="displayMediaList" id="music">
+    <div @click="displayMediaList('music')" id="music">
       <img src="@/assets/images/v2/music.png">
     </div>
-    <div :class="{chooseClass}" @click="displayMediaList" id="pics" style="position:relative">
-      <img src="@/assets/images/v2/pics.png" v-if="picUrl.length<=0">
+    <div :class="chooseClass" @click="displayMediaList('pics')" id="pics" style="position:relative">
+      <img src="@/assets/images/v2/pics.png" v-if="picUrl.length<=0" />
       <span v-else>{{picUrl.length}}</span>
-      <label class="menu_choose_pic" for="choosePic" v-if="picUrl.length<=0"></label>
-      <input type="file" name="pics" id="choosePic" hidden @change="selectImg">
     </div>
     <div @click="toMine" id="mine">
       <img src="@/assets/images/v2/mine.png">
@@ -27,14 +25,22 @@ export default {
       };
     }
   },
-  props: ["musicSwitch", "picUrl"],
-  methods: {
-    displayMediaList() {},
-    toMine() {},
-    selectImg(flies) {
-
-      console.log("files in SelcetImg", flies,this.$el);
+  watch: {
+    picUrl(newVal, oldVal) {
+      console.log("picUrl newVal", newVal);
     }
+  },
+  inject:['displayMediaList'],
+  props: {
+    musicSwitch: {
+      default: false
+    },
+    picUrl: {
+      default: []
+    }
+  },
+  methods: {
+    toMine() {}
   }
 };
 </script>
@@ -65,7 +71,7 @@ export default {
   animation: music-rotate 5s linear infinite;
 }
 .choose-pic {
-  border: 1px solid #ffe97a; /* px */
+  border: 2px solid #ffe97a; /* px */
   background-color: rgba(0, 0, 0, 0.424);
   border-radius: 50%;
   width: 70px;

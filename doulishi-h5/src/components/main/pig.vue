@@ -5,18 +5,11 @@
   </div>
 </template>
 <script>
+const {blessingText} = require('@/assets/utils/mock-data.js')
 export default {
   data() {
     return {
-      blessingText: [
-        "初一开门见喜",
-        "初二春风得意",
-        "初三家庭和睦",
-        "初四事业顺利",
-        "初五无忧无虑",
-        "初六感情甜蜜",
-        "初七健康平安"
-      ],
+      blessingText,
       blessingTextIndex: 0
     };
   },
@@ -51,12 +44,13 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../assets/less/tool.less";
+@import "~@/assets/less/tool.less";
 .pig-blessing {
   position: absolute;
   bottom: 209px;
   right: 0px;
   .fl_cet();
+  z-index: 1000
 }
 .pig {
   width: 210px;
