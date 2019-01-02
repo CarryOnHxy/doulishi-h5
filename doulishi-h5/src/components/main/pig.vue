@@ -50,7 +50,7 @@ export default {
   bottom: 209px;
   right: 0px;
   .fl_cet();
-  z-index: 1000
+  z-index: 800
 }
 .pig {
   width: 210px;

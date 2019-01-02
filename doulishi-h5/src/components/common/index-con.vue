@@ -3,19 +3,37 @@
     <img src="@/assets/images/v2/coin.png" class="index_coin">
     <img src="@/assets/images/v2/firecrackers.png" class="firecrackers">
     <img src="@/assets/images/v2/2019.png" class="year">
-    <img src="@/assets/images/v2/red-packet-man.png" class="red-packet-man">
+    <img src="@/assets/images/v2/red-packet-man.png" :class="redPacketMan">
     <img src="@/assets/images/v2/yuanbao.png" class="yuanbao">
     <img src="@/assets/images/lantern.png" class="lantern">
     <slot></slot>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  inject: ["inIndex"],
+  computed: {
+    redPacketMan() {
+      return {
+        "red-packet-man": true,
+        "to-left": !this.inIndex
+      };
+    }
+  },
+  methods: {
+    setPicUrl(newPicUrl) {
+      console.log("newPicUrl");
+      this.picUrl = newPicUrl;
+    }
+  }
+};
 </script>
 <style lang="less" scoped>
 @import "../../assets/less/tool.less";
 .index_con {
   .wh(100%, 100%);
+  max-width: 750px;
+  margin: 0 auto;
   background-image: url(../../assets/images/v2/bg.png);
   background-size: cover;
   background-repeat: no-repeat;
@@ -54,6 +72,10 @@ export default {};
   height: 137px;
   width: 137px;
 }
+.to-left {
+  right: 138px;
+  left: auto;
+}
 .yuanbao {
   width: 57px;
   height: 47px;
@@ -79,6 +101,5 @@ export default {};
   left: 37px;
   z-index: 150;
 }
-
 </style>
 

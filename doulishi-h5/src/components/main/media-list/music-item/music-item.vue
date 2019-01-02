@@ -12,7 +12,7 @@
         <img
           class="mo_play"
           :src=" item.isPlayed? require('@/assets/images/v2/pause.png'): require('@/assets/images/v2/play.png')"
-          @click="setCurrentMusic(item.url)"
+          @click="playMusic(index)"
           :id="index"
         >
       </div>
@@ -23,13 +23,29 @@
 const { music } = require("@/assets/utils/mock-data");
 export default {
   data() {
-    return {music};
+    return {
+      music
+    };
   },
-  inject:['setCurrentMusic'],
-  methods:{
-      playMusic(){
-
-      }
+  inject: ["setCurrentMusic"],
+  mounted(){
+    console.log(this.music)
+  },
+  methods: {
+    playMusic(index) {
+      let music = this.music.map((ele, idx) => {
+          if (index != idx) ele.isPlayed = false;
+          return ele;
+        }),
+        newMusic = music[index];
+      this.setCurrentMusic(newMusic, () => {
+        newMusic.isPlayed = !newMusic.isPlayed;
+        music.splice(index, 1, newMusic);
+        // console.log('music',music);
+        this.music = music;
+      });
+      this.currentIndex = index;
+    }
   }
 };
 </script>

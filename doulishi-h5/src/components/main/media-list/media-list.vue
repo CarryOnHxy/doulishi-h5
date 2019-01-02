@@ -25,7 +25,7 @@ export default {
   /* background-color:transparent;  */
   background-color: rgba(204, 204, 204, 0.397);
   .ab(t, 0);
-  z-index: 500;
+  z-index: 1000;
 }
 .list_close {
   width: 30px;

@@ -1,14 +1,18 @@
 <template>
   <div class="menu">
-    <div @click="displayMediaList('music')" id="music">
+    <div @click="displayMediaList('music')" id="music" :class="rotateClass">
       <img src="@/assets/images/v2/music.png">
     </div>
-    <div :class="chooseClass" @click="displayMediaList('pics')" id="pics" style="position:relative">
-      <img src="@/assets/images/v2/pics.png" v-if="picUrl.length<=0" />
+    <div :class="chooseClass" @click="displayMediaList('pics')" id="pics"
+     style="position:relative" v-if="inIndex">
+      <img src="@/assets/images/v2/pics.png" v-if="picUrl.length<=0">
       <span v-else>{{picUrl.length}}</span>
     </div>
-    <div @click="toMine" id="mine">
+    <div @click="toMine" id="mine"  v-if="inIndex">
       <img src="@/assets/images/v2/mine.png">
+    </div>
+    <div  bindtap="toIndex" id="index" v-if="!inIndex">
+      <img src="@/assets/images/v2/home.png" />
     </div>
   </div>
 </template>
@@ -23,6 +27,11 @@ export default {
       return {
         "choose-pic": this.picUrl.length > 0
       };
+    },
+    rotateClass() {
+      return {
+        "music-rotate": this.musicState
+      };
     }
   },
   watch: {
@@ -30,14 +39,15 @@ export default {
       console.log("picUrl newVal", newVal);
     }
   },
-  inject:['displayMediaList'],
+  inject: ["displayMediaList", "inIndex"],
   props: {
     musicSwitch: {
       default: false
     },
     picUrl: {
       default: []
-    }
+    },
+    musicState:{default:false}
   },
   methods: {
     toMine() {}

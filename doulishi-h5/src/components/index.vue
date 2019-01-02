@@ -1,12 +1,24 @@
 <template>
   <div class="container">
     <index-con>
-      <index-menu :pic-url="picUrl"></index-menu>
-      <button class="to_do_btn">逗利是</button>
+      <index-menu :pic-url="picUrl" :music-state="musicState"/>
       <pig :pic-url-length="picUrl.length"/>
-      <media-list @displayMediaList="displayMediaList" v-if="showMediaList" :media-type="mediaType"/>
+      <media-list
+        @displayMediaList="displayMediaList"
+        v-show="showMediaList"
+        :media-type="mediaType"
+        :pic-url="picUrl"
+        v-on:set-pic-url="setPicUrl"
+      />
       <album :pic-url="picUrl" v-if="picUrl.length>0"/>
-        <audio :src="currentMusic" muted autoplay ref="musicPlayer"></audio>
+      <button class="to_do_btn">{{inIndex?'逗利是':'发利是'}}</button>
+      <audio :src="currentMusic" muted ref="musicPlayer" controls autoplay></audio>
+      <div class="redpacket-info" v-if="!inIndex">
+        <!-- <img :src="redPacketInfo.userHeadImg">
+        <span>{{redPacketInfo.userName}} 给你拜年逗利是啦</span>-->
+        <img src="@/assets/images/avatar.png">
+        <span class="text">Carry On Hxy 给你拜年逗利是啦</span>
+      </div>
     </index-con>
   </div>
 </template>
@@ -14,40 +26,71 @@
 import indexCon from "./common/index-con.vue";
 import indexMenu from "./common/index-menu.vue";
 import pig from "./main/pig.vue";
-import album from './main/album.vue';
-import mediaList from './main/media-list/media-list.vue'
+import album from "./main/album.vue";
+import mediaList from "./main/media-list/media-list.vue";
+const { music } = require("@/assets/utils/mock-data");
 export default {
   data() {
     return {
       picUrl: [],
-      showMediaList:false,
-      mediaType:'',
-      currentMusic:''
+      showMediaList: false,
+      mediaType: "",
+      currentMusic: "",
+      inIndex: true,
+      musicState: true,
+      music
     };
   },
-  components: { indexCon, indexMenu, pig,album,mediaList},
-  methods:{
-    displayMediaList(mediaType){
-      console.log('displayMediaList ing')
-      this.showMediaList = !this.showMediaList;
-      if(mediaType) this.mediaType = mediaType
-    },
-    setPicUrl(newPicUrl){
-      this.picUrl = newPicUrl
-    },
-    setCurrentMusic(newMusic){
-      this.currentMusic = newMusic;
-      console.log(this.$refs);
-      
-      this.$refs['musicPlayer'].play()
+  components: { indexCon, indexMenu, pig, album, mediaList },
+  watch: {
+    picUrl(newVal, oldVal) {
+      console.log("父组件的picUrl", newVal);
     }
   },
-  provide(){
-    return {
-      displayMediaList:this.displayMediaList,
-      setPicUrl:this.setPicUrl,
-      setCurrentMusic:this.setCurrentMusic
+  mounted() {
+    let defaultMusic = music[0];
+    defaultMusic.isPlayed = true;
+    this.setCurrentMusic(defaultMusic);
+  },
+  methods: {
+    displayMediaList(mediaType) {
+      // console.log('displayMediaList ing')
+      if (this.inIndex) {
+        this.showMediaList = !this.showMediaList;
+        if (mediaType) this.mediaType = mediaType;
+      }
+    },
+    setPicUrl(newPicUrl) {
+      console.log('newPicUrl');
+      this.picUrl = newPicUrl;
+    },
+    setCurrentMusic(newMusic, callback) {
+      let musicPlayer = this.$refs["musicPlayer"];
+      callback && callback();
+      // console.log('newMusic',newMusic);
+      this.currentMusic = newMusic.url;
+      this.musicState = newMusic.isPlayed;
+      if (newMusic.isPlayed) {
+        console.dir(musicPlayer);
+        /* 更新URL立即报错会报DOMEXXCEPTION */
+        setTimeout(() => {
+          musicPlayer.play();
+        }, 100);
+      } else musicPlayer.pause();
+    },
+    setMusicState(musicState) {
+      this.musicState = musicState;
     }
+  },
+  provide() {
+    return {
+      displayMediaList: this.displayMediaList,
+      setPicUrl: this.setPicUrl,
+      setCurrentMusic: this.setCurrentMusic,
+      inIndex: this.inIndex,
+      setMusicState: this.setMusicState,
+      picUrl: this.picUrl
+    };
   }
 };
 </script>
@@ -74,6 +117,29 @@ export default {
   border: none;
   font-size: 36px;
   color: #ff663a;
+}
+.redpacket-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 110px;
+}
+
+.redpacket-info img {
+  height: 74px;
+  width: 74px;
+  border-radius: 50%;
+  border: 1px solid #ffe63a; /* no */
+  margin-bottom: 10px;
+}
+
+.redpacket-info .text {
+  font-size: 28px; /* px */
+  color: #ff663a;
+  margin-left: 4px;
 }
 </style>
 
