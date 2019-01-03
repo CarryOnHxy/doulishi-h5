@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     chooseClass() {
-      console.log("chooseClass", arguments, this);
+      // console.log("chooseClass", arguments, this);
       return {
         "choose-pic": this.picUrl.length > 0
       };

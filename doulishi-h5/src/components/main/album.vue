@@ -1,6 +1,6 @@
 <template>
   <div class="upload-pic-con">
-    <img :src="picUrl[currentPic]" :class="currentPicAnimation" ref="picsCon">
+    <div  :class="currentPicAnimation+' pic_con'" ref="picsCon" :style="{backgroundImage:'url('+picUrl[currentPic]+')'}"></div>
   </div>
 </template>
 <script>
@@ -9,7 +9,7 @@ export default {
     return {
       currentPicAnimation: "pic-animation",
       currentAnimationIndex: 0,
-      currentPic: 0
+      currentPic: 0 
     };
   },
   mounted(){
@@ -74,11 +74,13 @@ export default {
   display: inline-block;
   z-index: 0;
 }
-.upload-pic-con img {
+.upload-pic-con .pic_con {
   width: 100%;
   height: 100%;
   border-radius: 5%;
   position: absolute;
+  background-size: cover;
+  background-position: center 0;
   animation-duration: 8s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
