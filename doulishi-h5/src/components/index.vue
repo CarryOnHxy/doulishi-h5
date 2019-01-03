@@ -2,7 +2,7 @@
   <div class="container">
     <index-con>
       <index-menu :pic-url="picUrl" :music-state="musicState"/>
-      <pig :pic-url-length="picUrl.length" ref="pig"/>
+      <pig :pic-url-length="picUrl.length" />
       <media-list
         @displayMediaList="displayMediaList"
         v-if="showMediaList"
@@ -10,7 +10,7 @@
         :pic-url="picUrl"
         v-on:set-pic-url="setPicUrl"
       />
-      <album  :pic-url="picUrl" v-show="picUrl.length>0" />
+      <album  :pic-url="picUrl" v-show="picUrl.length>0" ref="album"/>
       <button class="to_do_btn">{{inIndex?'逗利是':'发利是'}}</button>
       <audio :src="currentMusic" muted ref="musicPlayer" controls autoplay></audio>
       <div class="redpacket-info" v-if="!inIndex">
@@ -45,7 +45,10 @@ export default {
   watch: {
     picUrl(newVal, oldVal) {
       console.log("父组件的picUrl", newVal);
-      this.$refs['album'].currentPic = 0;
+      /* 删除或者增加图片时从第一张开始播放，避免播放中的图片突然被删 */
+      if(newVal.length != oldVal.length){
+        this.$refs['album'].currentPic = 0;
+      }
     }
   },
   mounted() {
@@ -78,10 +81,7 @@ export default {
       this.musicState = newMusic.isPlayed;
       if (newMusic.isPlayed) {
         console.dir(musicPlayer);
-        /* 更新URL立即报错会报DOMEXXCEPTION */
-        setTimeout(() => {
           musicPlayer.play();
-        }, 100);
       } else musicPlayer.pause();
     },
     setMusicState(musicState) {

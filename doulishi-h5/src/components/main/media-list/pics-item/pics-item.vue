@@ -32,7 +32,7 @@ export default {
   },
   inject: ["displayMediaList", "setPicUrl","getPicUrl"],
   created(){
-    this.temPicUrl = this.getPicUrl()
+    this.temPicUrl = JSON.parse(JSON.stringify(this.getPicUrl()))
     return
   },
   beforeDestroy(){
