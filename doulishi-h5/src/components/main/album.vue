@@ -1,6 +1,7 @@
 <template>
   <div class="upload-pic-con">
-    <div  :class="currentPicAnimation+' pic_con'" ref="picsCon" :style="{backgroundImage:'url('+picUrl[currentPic]+')'}"></div>
+    <div  :class="currentPicAnimation+' pic_con'" ref="picsCon" 
+    :style="{backgroundImage:'url('+picUrl[currentPic]+')'}"></div>
   </div>
 </template>
 <script>

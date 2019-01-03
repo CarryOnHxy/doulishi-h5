@@ -2,15 +2,15 @@
   <div class="container">
     <index-con>
       <index-menu :pic-url="picUrl" :music-state="musicState"/>
-      <pig :pic-url-length="picUrl.length"/>
+      <pig :pic-url-length="picUrl.length" ref="pig"/>
       <media-list
         @displayMediaList="displayMediaList"
-        v-show="showMediaList"
+        v-if="showMediaList"
         :media-type="mediaType"
         :pic-url="picUrl"
         v-on:set-pic-url="setPicUrl"
       />
-      <album :pic-url="picUrl" v-if="picUrl.length>0"/>
+      <album  :pic-url="picUrl" v-show="picUrl.length>0" />
       <button class="to_do_btn">{{inIndex?'逗利是':'发利是'}}</button>
       <audio :src="currentMusic" muted ref="musicPlayer" controls autoplay></audio>
       <div class="redpacket-info" v-if="!inIndex">
@@ -45,6 +45,7 @@ export default {
   watch: {
     picUrl(newVal, oldVal) {
       console.log("父组件的picUrl", newVal);
+      this.$refs['album'].currentPic = 0;
     }
   },
   mounted() {
@@ -63,6 +64,11 @@ export default {
     setPicUrl(newPicUrl) {
       console.log('newPicUrl');
       this.picUrl = newPicUrl;
+    },
+    getPicUrl(){
+      console.log('getPicUrl');
+      
+      return this.picUrl
     },
     setCurrentMusic(newMusic, callback) {
       let musicPlayer = this.$refs["musicPlayer"];
@@ -89,7 +95,8 @@ export default {
       setCurrentMusic: this.setCurrentMusic,
       inIndex: this.inIndex,
       setMusicState: this.setMusicState,
-      picUrl: this.picUrl
+      picUrl: this.picUrl,
+      getPicUrl:this.getPicUrl
     };
   }
 };

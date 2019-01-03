@@ -1,7 +1,7 @@
 <template>
   <div class="pics_con">
-    <div class="pics_item_wrap" v-if="picUrl.length>0">
-      <div class="pics_item" v-for="(item,index) of picUrl" :key="index">
+    <div class="pics_item_wrap" v-if="temPicUrl.length>0">
+      <div class="pics_item" v-for="(item,index) of temPicUrl" :key="index">
         <img class="pics_pic" :src="item">
         <div class="pics_options">
           <img class="option" @click="upPic" :id="index" src="@/assets/images/v2/up.png">
@@ -21,51 +21,58 @@
 export default {
   data() {
     return {
-      picUrl: []
+      /* 给予来自祖先组件的依赖注入默认值 */
+      temPicUrl:[]
     };
   },
   watch: {
-    picUrl(newVal, oldVal) {}
+    picUrl(newVal, oldVal) {
+      console.log('newVal',newVal);
+    }
   },
-  inject: ["displayMediaList", "setPicUrl"],
-  beforeDestroy() {    
-    this.setPicUrl(this.picUrl);
+  inject: ["displayMediaList", "setPicUrl","getPicUrl"],
+  created(){
+    this.temPicUrl = this.getPicUrl()
+    return
+  },
+  beforeDestroy(){
+    this.setPicUrl(this.temPicUrl)
   },
   methods: {
     upPic(e) {
       let index = e.target.id;
-      let picUrl = this.picUrl;
+      let temPicUrl = this.temPicUrl;
       if (index != 0) {
-        let tmp = picUrl[index - 1];
-        picUrl[index - 1] = picUrl[index];
-        picUrl.splice(index, 1, tmp);
+        let tmp = temPicUrl[index - 1];
+        temPicUrl[index - 1] = temPicUrl[index];
+        temPicUrl.splice(index, 1, tmp);
       } else {
-        let tmp = picUrl[picUrl.length - 1];
-        picUrl[picUrl.length - 1] = picUrl[index];
-        picUrl.splice(index, 1, tmp);
+        let tmp = temPicUrl[temPicUrl.length - 1];
+        temPicUrl[temPicUrl.length - 1] = temPicUrl[index];
+        temPicUrl.splice(index, 1, tmp);
       }
-      this.picUrl = picUrl;
+      this.temPicUrl = temPicUrl;
     },
     downPic(e) {
       let index = e.target.id * 1;
-      let picUrl = this.picUrl;
-      if (index != picUrl.length - 1) {
-        let tmp = picUrl[index + 1];
-        picUrl[index + 1] = picUrl[index];
-        picUrl.splice(index, 1, tmp);
+      let temPicUrl = this.temPicUrl;
+      if (index != temPicUrl.length - 1) {
+        let tmp = temPicUrl[index + 1];
+        temPicUrl[index + 1] = temPicUrl[index];
+        temPicUrl.splice(index, 1, tmp);
       } else {
-        let tmp = picUrl[0];
-        picUrl[0] = picUrl[index];
-        picUrl.splice(index, 1, tmp);
+        let tmp = temPicUrl[0];
+        temPicUrl[0] = temPicUrl[index];
+        temPicUrl.splice(index, 1, tmp);
       }
-      console.log("downPic", picUrl);
-      this.picUrl = picUrl;
+      console.log("downPic", temPicUrl);
+      this.temPicUrl = temPicUrl;
     },
     deletePic(e) {
       let index = e.target.id * 1;
-      let picUrl = this.picUrl;
-      picUrl.splice(index, 1);
-      this.picUrl = picUrl;
+      let temPicUrl = this.temPicUrl;
+      temPicUrl.splice(index, 1);
+      this.temPicUrl = temPicUrl;
     },
     selectImg(e) {
       // console.log("event", e);
@@ -76,9 +83,9 @@ export default {
       let reader = new FileReader();
       reader.addEventListener("load", e => {
         let fileResult = reader.result,
-          picUrl = this.picUrl;
-        if (picUrl.indexOf(fileResult) == -1 && picUrl.length < 8) {
-          picUrl.push(fileResult);
+          temPicUrl = this.temPicUrl;
+        if (temPicUrl.indexOf(fileResult) == -1 && temPicUrl.length < 8) {
+          temPicUrl.push(fileResult);
         }
       });
       if (/\.(jpe?g|png|bmp)$/i.test(file.name)) reader.readAsDataURL(file);
